@@ -828,6 +828,7 @@ class BaseSearchQuery(object):
         clone = klass(using=using)
         clone.query_filter = deepcopy(self.query_filter)
         clone.order_by = self.order_by[:]
+        clone.group_by = self.group_by
         clone.models = self.models.copy()
         clone.boost = self.boost.copy()
         clone.highlight = self.highlight
