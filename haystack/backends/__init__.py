@@ -107,7 +107,7 @@ class BaseSearchBackend(object):
                fields='', highlight=False, facets=None, date_facets=None, query_facets=None,
                narrow_queries=None, spelling_query=None, within=None,
                dwithin=None, distance_point=None, models=None,
-               limit_to_registered_models=None, result_class=None, **kwargs):
+               limit_to_registered_models=None, result_class=None, group_by=None, **kwargs):
         """
         Takes a query to search on and returns dictionary.
 
@@ -279,6 +279,7 @@ class BaseSearchQuery(object):
 
     def __init__(self, using=DEFAULT_ALIAS):
         self.query_filter = SearchNode()
+        self.group_by = None
         self.order_by = []
         self.models = set()
         self.boost = {}
@@ -337,6 +338,9 @@ class BaseSearchQuery(object):
         kwargs = {
             'start_offset': self.start_offset,
         }
+
+        if self.group_by:
+            kwargs['group_by'] = self.group_by
 
         if self.order_by:
             kwargs['sort_by'] = self.order_by
@@ -615,6 +619,14 @@ class BaseSearchQuery(object):
 
         if subtree:
             self.query_filter.end_subtree()
+
+    def add_group_by(self, group_by):
+        """Group the search results by a field and display only the first result of the group"""
+        self.group_by = group_by
+
+    def clear_group_by(self):
+        """Cancel field collapsing"""
+        self.group_by = None
 
     def add_order_by(self, field):
         """Orders the search result by a field."""

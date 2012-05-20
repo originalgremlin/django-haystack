@@ -326,6 +326,12 @@ class SearchQuerySet(object):
         clone.query.add_highlight()
         return clone
 
+    def group_by(self, field_name):
+        """Group results by a field"""
+        clone = self._clone()
+        clone.query.add_group_by(field_name)
+        return clone
+
     def models(self, *models):
         """Accepts an arbitrary number of Model classes to include in the search."""
         clone = self._clone()

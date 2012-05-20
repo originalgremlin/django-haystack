@@ -118,7 +118,7 @@ class SolrSearchBackend(BaseSearchBackend):
                fields='', highlight=False, facets=None, date_facets=None, query_facets=None,
                narrow_queries=None, spelling_query=None, within=None,
                dwithin=None, distance_point=None, models=None,
-               limit_to_registered_models=None, result_class=None, **kwargs):
+               limit_to_registered_models=None, result_class=None, group_by=None, **kwargs):
         if len(query_string) == 0:
             return {
                 'results': [],
@@ -129,6 +129,12 @@ class SolrSearchBackend(BaseSearchBackend):
             'fl': '* score',
         }
         geo_sort = False
+
+        if group_by:
+            kwargs['group'] = 'true'
+            kwargs['group.field'] = group_by
+            # Until now we can only ask for a flat list of results without groups data
+            kwargs['group.main'] = 'true'
 
         if fields:
             if isinstance(fields, (list, set)):
@@ -627,6 +633,9 @@ class SolrSearchQuery(BaseSearchQuery):
                     order_by_list.append('%s asc' % order_by)
 
             search_kwargs['sort_by'] = ", ".join(order_by_list)
+
+        if self.group_by:
+            search_kwargs['group_by'] = self.group_by
 
         if self.end_offset is not None:
             search_kwargs['end_offset'] = self.end_offset
