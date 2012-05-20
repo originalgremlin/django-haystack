@@ -20,6 +20,10 @@ highlighting, spatial search and spelling suggestions.
 
 You can find more information at http://haystacksearch.org/.
 
+NOTE: This branch adds 'group_by' functionality copied from
+https://github.com/albanm/django-haystack/commit/edb8d76579fcec2e1c9d313a020be7662c5f5e29#diff-2
+
+
 
 Getting Help
 ============
